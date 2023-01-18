@@ -28,8 +28,38 @@ def lu(A):
     return P, L, U
 
 
+def lu_doolittle(A):
+    if not isinstance(A, np.matrix):
+        raise ValueError("Input is not a numpy.matrix object.")
+    if A.shape[0] != A.shape[1]:
+        raise ValueError("Input matrix is not square.")
+    n = A.shape[0]
+    L = np.zeros((n, n))
+    U = np.zeros((n, n))
+    for i in range(n):
+        # Update U first
+        for j in range(i, n):
+            if i == 0:
+                U[i, j] = A[i, j]
+            else:
+                U[i, j] = A[i, j] - np.dot(L[i, :], U[:, j])
+        for j in range(i + 1):
+            if j == 0:
+                L[i, j] = A[j, j] / U[j, j]
+            elif j == i:
+                L[i, j] = 1
+            else:
+                if U[j, j] != 0:
+                    L[i, j] = (A[i, j] - np.dot(L[i, :], U[:, j])) / U[j, j]
+    P = np.identity(n)
+    return P, L, U
+
+
 if __name__ == '__main__':
     A = np.matrix([[2, 1, 1], [1, 2, 1], [1, 1, 2]])
+    A = np.matrix([[2, -1, -2],
+                   [-4, 6, 3],
+                   [-4, -2, 8]])
     # A = np.matrix([[0, 1, 1], [1, 0, 1], [1, 1, 0]])
     # A = np.matrix([[0, 1, 1, 1], [1, 0, 1, 1], [1, 1, 0, 1], [1, 1, 1, 0]])
 
