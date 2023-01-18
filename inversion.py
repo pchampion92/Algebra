@@ -44,15 +44,14 @@ def get_non_zero_diagonal(A, index, Ainv):
     elif A.shape == (1, 1):
         raise ValueError("Singular matrix")
     else:
-        n = A.shape[0]
-        # TODO: select the largest, element in the row
-        for i in range(index + 1, n):
-            if A[index, i] != 0:
-                A = permutate(A, index_origin=index, index_target=i, axis=0)
+        imax = np.argmax(np.abs(A[index, :]))
+        if A[index, imax] <= 1e-3:
+            raise ValueError("Singular matrix")
+        else:
+            A = permutate(A, index_origin=index, index_target=imax, axis=0)
 
-                Ainv = permutate(Ainv, index_origin=index, index_target=i, axis=0)
-                return A, Ainv
-        raise ValueError("Singular matrix")
+            Ainv = permutate(Ainv, index_origin=index, index_target=imax, axis=0)
+            return A, Ainv
 
 
 def get_zero_column(A, index, Ainv, descending=True):
@@ -90,7 +89,7 @@ def inverse(matrix):
 
 if __name__ == "__main__":
     A = np.matrix([[1, 2, 3], [0, 1, 2], [0, 0, 1]])
-    A = np.matrix([[0, 1, 1], [1, 0, 1], [1, 1, 0]])
+    # A = np.matrix([[0, 1, 1], [1, 0, 1], [1, 1, 0]])
     A = np.matrix([[1, 2, 3], [1, 1, 1], [0, 4, 5]])
 
     Ainv, _ = inverse(A)
