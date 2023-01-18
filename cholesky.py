@@ -6,7 +6,7 @@ def cholesky(A0, i=0):
     n = A.shape[0]
     if (A.T != A).any():
         raise ValueError("Input matrix is not symetrical")
-    if (A[i, i] < 0):
+    if A[i, i] < 0:
         raise ValueError("Input matrix is not SDP")
     if i == n - 1:
         L = np.identity(n)
